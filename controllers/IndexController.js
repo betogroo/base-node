@@ -1,3 +1,4 @@
+const passport = require('passport')
 class IndexController {
 
     //GET    
@@ -11,6 +12,14 @@ class IndexController {
         var { id, name } = req.body
         var data = { id, name }
         res.json(data)
+    }
+
+    auth(req, res, next) {
+        passport.authenticate('local', {
+            successRedirect: '/',
+            failureRedirect: '/',
+            failureFlash: true
+        })(req, res, next)
     }
 
 

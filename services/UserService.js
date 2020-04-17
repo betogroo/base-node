@@ -5,17 +5,20 @@ const bcrypt = require('bcryptjs')
 
 
 class UserService {
-    
+
     constructor() {
         this.User = db['User']
         this.Role = db['Role']
     }
 
-    async getAll(){
+    async getAll() {
         try {
             let users = this.User.findAll({
                 include: [
-                    {model: this.Role}
+                    {
+                        model: this.Role,
+                        attributes: ['id', 'name']
+                    }
                 ]
             })
             if (users) {
@@ -28,13 +31,13 @@ class UserService {
         }
     }
 
-    async getUser(id){
+    async getUser(id) {
         try {
-            var user = await this.User.findByPk(id,{
-                include:[
+            var user = await this.User.findByPk(id, {
+                include: [
                     {
                         model: this.Role,
-                        attributes: ['name']
+                        attributes: ['id', 'name']
                     }
                 ]
             })
@@ -44,11 +47,24 @@ class UserService {
                 return "Erro ao buscar Usuário"
             }
         } catch (error) {
-           console.log(error) 
+            console.log(error)
         }
     }
 
-    async store(data){
+    async getByEmail(email) {
+        try {
+            var user = await this.User.findOne({
+                where: {
+                    email: email
+                }
+            })
+            return user
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async store(data) {
         try {
             var user = await this.User.create(data)
             if (user) {
@@ -60,21 +76,23 @@ class UserService {
             console.log(error)
         }
     }
-    async delete(id){
+    async delete(id) {
         try {
-            await this.User.destroy({
-                where: {id: id}
+            var user = await this.User.destroy({
+                where: { id: id }
             })
+            return user
         } catch (error) {
             console.log(error)
         }
     }
 
-    async update(data){
+    async update(data) {
         try {
-            await this.User.update(data,{
-                where: {id: data.id}
+            var user = await this.User.update(data, {
+                where: { id: data.id }
             })
+            return user
         } catch (error) {
             console.log(error)
         }

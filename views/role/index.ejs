@@ -1,0 +1,39 @@
+<%- include('../partials/header.ejs') %>
+
+<div class="container">
+
+    <h1>Permissões</h1>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th scope="col">Nível</th>
+                <th scope="col">Título</th>
+                <th scope="col">Ações</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <% roles.forEach(role => { %>
+            <tr>
+                <th scope="row"><%= role.id%> </th>
+                <td><%= role.name%></td>
+                <td>
+                    <form action="/role/delete" method="POST">
+                        <input type="hidden" name="id" value="<%=role.id%>">
+                        <button class="btn btn-sm btn-danger" type="submit">Excluir</button>
+
+                        <a class="btn btn-sm btn-warning" href="/role/edit/<%= role.id%>">Editar</a>
+                    </form>
+                </td>
+
+            </tr>
+            <% }) %>
+
+
+        </tbody>
+    </table>
+
+
+</div>
+
+<%- include('../partials/footer.ejs') %>

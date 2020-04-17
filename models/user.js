@@ -4,13 +4,13 @@ module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     name: {
       type: DataTypes.STRING,
-      set(value){
+      set(value) {
         this.setDataValue('name', value.toUpperCase())
       }
     },
     email: {
       type: DataTypes.STRING,
-      set(value){
+      set(value) {
         this.setDataValue('email', value.toLowerCase())
       }
     },
@@ -20,9 +20,14 @@ module.exports = (sequelize, DataTypes) => {
         this.setDataValue('password', bcrypt.hashSync(value, 10))
       }
     },
-    idRole: DataTypes.INTEGER
+    idRole: {
+      type: DataTypes.INTEGER
+    },
+    rg: {
+      type: DataTypes.INTEGER
+    }
   }, {});
-  User.associate = function(models) {
+  User.associate = function (models) {
     this.belongsTo(models.Role, {
       foreignKey: 'idRole'
     })

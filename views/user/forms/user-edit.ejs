@@ -1,0 +1,30 @@
+<form action="/user/update" method="post">
+    <input type="hidden" name="id" value="<%= user.id %>">
+    <div class="form-group">
+        <label for="name">Nome</label>
+        <input type="text" class="form-control" name="name" autocomplete="off" value="<%= user.name %>">
+    </div>
+    <div class="form-group">
+        <label for="rg">RG</label>
+        <input type="text" class="form-control" name="rg" autocomplete="off" value="<%= user.rg %>">
+
+    </div>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" name="email" autocomplete="off" value="<%= user.email %>">
+    </div>
+    <div class="form-group">
+        <label for="idRole">Nível</label>
+
+        <select class="form-control" name="idRole" id="">
+            <option value="<%= user.Role.id %>"><%= user.Role.name %> </option>
+            <% roles.forEach(role => { %>
+            <option value="<%= role.id %>"><%= role.name %> </option>
+            <% }) %>
+        </select>
+
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">Salvar</button>
+</form>

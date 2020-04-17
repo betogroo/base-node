@@ -1,8 +1,29 @@
 <%- include('partials/header.ejs') %>
 
+<% if (userLogged) { %>
 <div class="container">
+    <% if (error != '') { %>
+    <div class="alert alert-danger"><%= error%></div>
+    <% } %>
 
-    <h1>Beto</h1>
+    <h1>Logado como <%= userLogged.name %> </h1>
+    <div class="list-group">
+        <a href="/users" class="list-group-item list-group-item-action active">
+            Usuários
+        </a>
+        <a href="/roles" class="list-group-item list-group-item-action">Permissões</a>
+        <a href="#" class="list-group-item list-group-item-action">Morbi leo risus</a>
+        <a href="#" class="list-group-item list-group-item-action">Porta ac consectetur ac</a>
+        <a href="#" class="list-group-item list-group-item-action disabled" tabindex="-1"
+            aria-disabled="true">Vestibulum at eros</a>
+    </div>
+
+    <% } else { %>
+
+    <%- include('partials/login.ejs') %>
+
+    <% } %>
+
 
 </div>
 

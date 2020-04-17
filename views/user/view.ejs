@@ -1,0 +1,17 @@
+<%- include('../partials/header.ejs') %>
+
+<div class="container">
+
+    <h1>Cadastro de <%= user.name %></h1>
+    <ul class="list-group">
+        <li class="list-group-item">Email: <%= user.email%></li>
+        <li class="list-group-item">RG: <%= user.email%></li>
+        <li class="list-group-item">Nível:<%= user.Role.name%></li>
+    </ul>
+    <a class="btn btn-primary btn-sm" href="/users">Voltar</a>
+
+
+
+</div>
+
+<%- include('../partials/footer.ejs') %>
