@@ -14,8 +14,7 @@
         <a href="/roles" class="list-group-item list-group-item-action">Permissões</a>
         <a href="#" class="list-group-item list-group-item-action">Morbi leo risus</a>
         <a href="#" class="list-group-item list-group-item-action">Porta ac consectetur ac</a>
-        <a href="#" class="list-group-item list-group-item-action disabled" tabindex="-1"
-            aria-disabled="true">Vestibulum at eros</a>
+        <a href="/logout" class="list-group-item list-group-item-action">Sair</a>
     </div>
 
     <% } else { %>
@@ -24,7 +23,7 @@
 
     <% } %>
 
-
+        <%- include('partials/msg.ejs') %> 
 </div>
 
 <%- include('partials/footer.ejs') %>

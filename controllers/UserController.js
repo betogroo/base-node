@@ -1,5 +1,6 @@
 const UserService = require('../services/UserService')
 const RoleService = require('../services/RoleService')
+const { validationResult } = require('express-validator')
 class UserController {
 
     //GET    
@@ -47,6 +48,24 @@ class UserController {
     // POST
     async post(req, res) {
         var { name, email, rg, idRole } = req.body
+
+        const errors = validationResult(req).array();
+        var error = []
+    if (errors.length > 0) {
+
+        errors.forEach(element => {
+            error.push(element.msg)
+        });
+
+    
+        if (errors.length == 1) {
+            req.flash('error', `${errors.length} erro: ${error.join(', ')}`)
+        }else{
+            req.flash('error', `${errors.length} erros: ${error.join(', ')}`)
+        }
+
+        res.redirect('/user/new')
+    }else{
         var data = { name, email, rg, idRole }
         data.password = rg.substring(0, 5)
         try {
@@ -56,6 +75,7 @@ class UserController {
         } catch (error) {
             console.log(error)
         }
+    }
     }
 
     async delete(req, res) {

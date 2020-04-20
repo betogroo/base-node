@@ -1,4 +1,5 @@
 const RoleService = require('../services/RoleService')
+const { validationResult } = require('express-validator')
 class RoleController {
 
     //GET    
@@ -35,6 +36,15 @@ class RoleController {
     // POST
     async post(req, res) {
         var { id, name } = req.body
+        const errors = validationResult(req).array();
+        var error = []
+        if (errors.length > 0) {
+            errors.forEach(element => {
+                error.push(element.msg)
+            });
+            req.flash('error', `${errors.length} erros: ${error.join(', ')}`)
+            res.redirect('/role/new')
+        }else{
         var data = { id, name }
         try {
             var role = await RoleService.store(data)
@@ -43,6 +53,7 @@ class RoleController {
         } catch (error) {
             console.log(error)
         }
+    }
     }
 
     async delete(req, res) {
