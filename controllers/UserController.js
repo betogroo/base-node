@@ -3,6 +3,10 @@ const RoleService = require('../services/RoleService')
 const { validationResult } = require('express-validator')
 class UserController {
 
+
+
+
+
     //GET    
     async  index(req, res) {
         var users = await UserService.getAll()
@@ -49,33 +53,28 @@ class UserController {
     async post(req, res) {
         var { name, email, rg, idRole } = req.body
 
-        const errors = validationResult(req).array();
+        let errors = validationResult(req).array();
         var error = []
-    if (errors.length > 0) {
+        if (errors.length > 0) {
 
-        errors.forEach(element => {
-            error.push(element.msg)
-        });
-
-    
-        if (errors.length == 1) {
-            req.flash('error', `${errors.length} erro: ${error.join(', ')}`)
-        }else{
-            req.flash('error', `${errors.length} erros: ${error.join(', ')}`)
+            var element = ""
+            for (let i = 0; i < errors.length; i++) {
+                element += `${i + 1} - ${errors[i].msg} `;
+            }
+            //res.json(element)
+            req.flash('error', `${errors.length} erros: ${element}`)
+            res.redirect('/user/new')
+        } else {
+            var data = { name, email, rg, idRole }
+            data.password = rg.substring(0, 5)
+            try {
+                var user = await UserService.store(data)
+                //res.json({ user })
+                res.redirect('/users')
+            } catch (error) {
+                console.log(error)
+            }
         }
-
-        res.redirect('/user/new')
-    }else{
-        var data = { name, email, rg, idRole }
-        data.password = rg.substring(0, 5)
-        try {
-            var user = await UserService.store(data)
-            //res.json({ user })
-            res.redirect('/users')
-        } catch (error) {
-            console.log(error)
-        }
-    }
     }
 
     async delete(req, res) {
@@ -88,20 +87,43 @@ class UserController {
             res.json({ "msg": `Não foi possível excluir o usuário ${id}` })
         }
     }
+
     async update(req, res) {
         var { id, name, email, idRole, rg } = req.body
-        var data = { id, name, email, idRole, rg }
-        var user = await UserService.update(data)
-        if (user) {
-            //res.json({ "msg": "Edição de usuário feita com sucesso" })
-            res.redirect('/users')
+        let errors = validationResult(req).array();
+        var error = []
+        if (errors.length > 0) {
+
+            errors.forEach(element => {
+                error.push(element.msg)
+            });
+
+
+            if (errors.length == 1) {
+                req.flash('error', `${errors.length} erro: ${error.join(', ')}`)
+            } else {
+                req.flash('error', `${errors.length} erros: ${error.join(', ')}`)
+            }
+
+            res.redirect('/user/edit/' + id)
         } else {
-            res.json({ "msg": "Não foi possível editar o usuário" })
+
+            try {
+                var data = { id, name, email, idRole, rg }
+                var user = await UserService.update(data)
+                if (user) {
+                    req.flash('success', `Usuário ${id} editado com sucesso`)
+                    res.redirect('/users')
+                } else {
+                    req.flash('success', `Não foi possível editar`)
+                    res.redirect('/user/edit/' + id)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+
         }
     }
-
-
-
 
 }
 

@@ -29,11 +29,11 @@ class RoleService {
     async getRole(id) {
         try {
             var role = await this.Role.findByPk(id, {})
-            if (role) {
-                return role
-            } else {
-                return "Erro ao buscar Nível de Permissão"
-            }
+            //if (role) {
+            return role
+            //} else {
+            //return "Erro ao buscar Nível de Permissão"
+            // }
         } catch (error) {
             console.log(error)
         }
