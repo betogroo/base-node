@@ -1,7 +1,15 @@
 const bcrypt = require('bcryptjs')
+
+
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
+    id:{
+      type: DataTypes.STRING,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: false,
+    },
     name: {
       type: DataTypes.STRING,
       set(value) {
@@ -20,10 +28,10 @@ module.exports = (sequelize, DataTypes) => {
         this.setDataValue('password', bcrypt.hashSync(value, 10))
       }
     },
-    idRole: {
+    rg: {
       type: DataTypes.INTEGER
     },
-    rg: {
+    idRole: {
       type: DataTypes.INTEGER
     }
   }, {});

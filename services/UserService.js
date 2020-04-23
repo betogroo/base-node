@@ -1,6 +1,8 @@
 const db = require('../models/')
 const { Op } = require("sequelize")
 const bcrypt = require('bcryptjs')
+const randomID = require('crypto-random-string');
+
 
 
 
@@ -11,7 +13,7 @@ class UserService {
         this.Role = db['Role']
     }
 
-    async getAll() {
+    async getAll(order = 'createdAt') {
         try {
             let users = this.User.findAll({
                 include: [
@@ -19,7 +21,8 @@ class UserService {
                         model: this.Role,
                         attributes: ['id', 'name']
                     }
-                ]
+                ],
+                order: [[order, 'DESC']]
             })
             if (users) {
                 return users
@@ -66,6 +69,7 @@ class UserService {
 
     async store(data) {
         try {
+            data.id = randomID({length: 7, type: 'url-safe'})
             var user = await this.User.create(data)
             if (user) {
                 return user

@@ -1,8 +1,6 @@
 'use strict';
 const { check } = require('express-validator')
-const UserService = require('../services/UserService')
-const RoleService = require('../services/RoleService')
-const badLanguage = ['bosta', 'merda', 'coco']
+const badLanguage = ['bosta', 'merda', 'coco', 'inferno', 'xixi', 'caraio', 'aaa']
 const validateData = []
 
 const user = [

@@ -3,6 +3,9 @@
 <div class="container">
 
     <h1>Usuários</h1>
+    <% if (users.length > 0) { %>
+     
+    
     <table class="table table-sm">
         <thead>
             <tr>
@@ -35,6 +38,9 @@
 
         </tbody>
     </table>
+    <% } else { %>
+     <h4>Não há usuários cadastrados</h4>
+    <% } %>
 
 </div>
 

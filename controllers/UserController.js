@@ -1,6 +1,7 @@
 const UserService = require('../services/UserService')
 const RoleService = require('../services/RoleService')
 const { validationResult } = require('express-validator')
+const randomID = require('crypto-random-string');
 class UserController {
 
 
@@ -9,7 +10,7 @@ class UserController {
 
     //GET    
     async  index(req, res) {
-        var users = await UserService.getAll()
+        var users = await UserService.getAll('idRole')
 
         //res.json(users)
         res.render("user/index.ejs", { users });
@@ -17,9 +18,7 @@ class UserController {
 
     async view(req, res) {
         var { id } = req.params
-        if (isNaN(id)) {
-            res.sendStatus(404)
-        } else {
+       
             try {
                 var user = await UserService.getUser(id)
                 //res.json({ user })
@@ -27,7 +26,7 @@ class UserController {
             } catch (error) {
                 console.log(error)
             }
-        }
+        
 
     }
 
@@ -66,6 +65,7 @@ class UserController {
             res.redirect('/user/new')
         } else {
             var data = { name, email, rg, idRole }
+            //data.id = randomID({length: 7, type: 'url-safe'})
             data.password = rg.substring(0, 5)
             try {
                 var user = await UserService.store(data)
