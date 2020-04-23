@@ -46,6 +46,30 @@ module.exports = {
         email: 'jdanteguedini@gmail.com',
         idRole: 10
       },
+      {
+        id: randomID({length: 7, type: 'url-safe'}),
+        name: 'MÁRIO DELIA',
+        rg: "66666666",
+        password: bcrypt.hashSync('66666666', 10),
+        email: 'mariodelia@gmail.com',
+        idRole: 10
+      },
+      {
+        id: randomID({length: 7, type: 'url-safe'}),
+        name: 'SYLVIO TORQUATO JUNQUEIRA',
+        rg: "77777777",
+        password: bcrypt.hashSync('77777777', 10),
+        email: 'jsylvio@gmail.com',
+        idRole: 10
+      },
+      {
+        id: randomID({length: 7, type: 'url-safe'}),
+        name: 'DAVID CARNEIRO EWBANK',
+        rg: "88888888",
+        password: bcrypt.hashSync('88888888', 10),
+        email: 'carneiro@gmail.com',
+        idRole: 10
+      },
       
   ], {});
   },
