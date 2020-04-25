@@ -13,16 +13,18 @@ class UserService {
         this.Role = db['Role']
     }
 
-    async getAll(order = 'createdAt') {
+    async getAll(offset, limit = 5, order = 'createdAt') {
         try {
-            let users = this.User.findAll({
+            let users = this.User.findAndCountAll({
                 include: [
                     {
                         model: this.Role,
                         attributes: ['id', 'name']
                     }
                 ],
-                order: [[order, 'DESC']]
+                order: [[order, 'DESC']],
+                limit: limit,
+                offset: offset
             })
             if (users) {
                 return users
@@ -66,10 +68,22 @@ class UserService {
             console.log(error)
         }
     }
+    async getByCpf(cpf) {
+        try {
+            var user = await this.User.findOne({
+                where: {
+                    cpf: cpf
+                }
+            })
+            return user
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     async store(data) {
         try {
-            data.id = randomID({length: 7, type: 'url-safe'})
+            data.id = randomID({ length: 7, type: 'url-safe' })
             var user = await this.User.create(data)
             if (user) {
                 return user

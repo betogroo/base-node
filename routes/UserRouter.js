@@ -23,7 +23,11 @@ router.get('/user/edit/:id', UserController.edit)
 
 
 router.post('/user',
-    [validateData.User, checkData.Email],
+    [
+        validateData.User,
+        checkData.Email,
+        checkData.Cpf
+    ],
     UserController.post)
 router.post('/user/delete/', UserController.delete)
 router.post('/user/update',

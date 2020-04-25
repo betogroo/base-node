@@ -5,8 +5,9 @@
     <h1>Cadastro de <%= user.name %></h1>
     <ul class="list-group">
         <li class="list-group-item">Email: <%= user.email%></li>
-        <li class="list-group-item">RG: <%= user.email%></li>
-        <li class="list-group-item">Nível:<%= user.Role.name%></li>
+        <li class="list-group-item">RG: <%= user.rg%></li>
+        <li class="list-group-item">CPF: <%= user.cpf%></li>
+        <li class="list-group-item">Nível: <%= user.Role.name%></li>
     </ul>
     <a class="btn btn-primary btn-sm" href="/users">Voltar</a>
 

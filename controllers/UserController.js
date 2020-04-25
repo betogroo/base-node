@@ -1,32 +1,61 @@
 const UserService = require('../services/UserService')
 const RoleService = require('../services/RoleService')
 const { validationResult } = require('express-validator')
-const randomID = require('crypto-random-string');
+
+const randomID = require('crypto-random-string')
+
 class UserController {
-
-
 
 
 
     //GET    
     async  index(req, res) {
-        var users = await UserService.getAll('idRole')
+        const { cpf } = require('cpf-cnpj-validator')
+        var { page } = req.query
+        var limit = 3
+
+
+        if (!page || isNaN(page) || page == 1) {
+            page = 1
+            var offset = 0
+        } else {
+            page = parseInt(page)
+            var offset = (parseInt(page) - 1) * limit
+        }
+        var users = await UserService.getAll(offset, limit, 'idRole')
+
+        users.page = page
+        users.offset = offset
+        users.limit = limit
+        users.next = users.page + 1
+        users.previous = users.page - 1
+        if (users.count % limit == 0) {
+            users.pages = Math.trunc(users.count / users.limit)
+        } else {
+            users.pages = Math.trunc(users.count / users.limit) + 1
+        }
+
+
+
+
+
+
 
         //res.json(users)
-        res.render("user/index.ejs", { users });
+        res.render("user/index.ejs", { users, cpf });
     }
 
     async view(req, res) {
         var { id } = req.params
-       
-            try {
-                var user = await UserService.getUser(id)
-                //res.json({ user })
-                res.render('user/view', { user })
-            } catch (error) {
-                console.log(error)
-            }
-        
+
+        try {
+            var user = await UserService.getUser(id)
+            //res.json({ user })
+            res.render('user/view', { user })
+        } catch (error) {
+            console.log(error)
+        }
+
 
     }
 
@@ -50,7 +79,7 @@ class UserController {
 
     // POST
     async post(req, res) {
-        var { name, email, rg, idRole } = req.body
+        var { name, email, rg, cpf, idRole } = req.body
 
         let errors = validationResult(req).array();
         var error = []
@@ -64,7 +93,7 @@ class UserController {
             req.flash('error', `${errors.length} erros: ${element}`)
             res.redirect('/user/new')
         } else {
-            var data = { name, email, rg, idRole }
+            var data = { name, email, rg, cpf, idRole }
             //data.id = randomID({length: 7, type: 'url-safe'})
             data.password = rg.substring(0, 5)
             try {

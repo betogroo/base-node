@@ -20,14 +20,17 @@ module.exports = {
       rg: {
         type: Sequelize.INTEGER
       },
+      cpf: {
+        type: Sequelize.STRING
+      },
       idRole: {
         type: Sequelize.INTEGER,
         allowNull: false,
         default: 10,
         references: {
-            model: 'Roles',
-            key: 'id'
-          }/* ,
+          model: 'Roles',
+          key: 'id'
+        }/* ,
           onDelete: 'SET DEFAULT',
           onUpdate: 'CASCADE' */
       },
