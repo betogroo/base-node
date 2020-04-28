@@ -1,4 +1,5 @@
 const express = require("express")
+const path = require('path')
 const app = express()
 const session = require("express-session");
 const flash = require('connect-flash')
@@ -7,7 +8,7 @@ require('./config/auth')(passport)
 const PORT = 3000
 
 app.set('view engine', 'ejs');
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
     secret: "qualquercoisa",
@@ -44,6 +45,6 @@ app.use('/', UserRouter)
 app.use('/', RoleRouter)
 
 app.listen(PORT, () => {
-    console.log("O servidor está rodando em http://localhost:" + PORT)
+    console.log(`O servidor está rodando em http://localhost:${PORT}`)
 })
 

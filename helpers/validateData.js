@@ -1,8 +1,11 @@
 'use strict';
 const { check } = require('express-validator')
-const { cpf } = require('cpf-cnpj-validator');
+const { cpf } = require('cpf-cnpj-validator')
+const moment = require('moment')
 const badLanguage = ['bosta', 'merda', 'coco', 'inferno', 'xixi', 'caraio', 'aaa']
 const validateData = []
+
+
 
 const user = [
     check('name')
@@ -15,12 +18,20 @@ const user = [
     check('email').isEmail().withMessage('Email inválido')
         .not().isEmpty().withMessage('Obrigatório o cadastro do email')
         .trim(),
+    check('birthDate').custom(async value => {
+        if (moment().isBefore(value)) {
+            return Promise.reject('Data de Nascimento inválida');
+        }
+    })
+        .trim(),
     check('cpf').custom(async value => {
         if (!cpf.isValid(value)) {
             return Promise.reject('CPF Inválido');
         }
     })
-        .trim()
+    .trim(),
+    check('password')
+        .not().isEmpty().withMessage('Obrigatória a senha.')
 ]
 
 

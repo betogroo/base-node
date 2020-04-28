@@ -34,6 +34,12 @@ module.exports = (sequelize, DataTypes) => {
     cpf: {
       type: DataTypes.STRING
     },
+    birthDate:{
+      type: DataTypes.DATEONLY
+    },
+    gender:{
+      type: DataTypes.ENUM('M', 'F')
+    },
     idRole: {
       type: DataTypes.INTEGER
     }

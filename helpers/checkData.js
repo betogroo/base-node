@@ -2,8 +2,10 @@
 const { check } = require('express-validator')
 const UserService = require('../services/UserService')
 const RoleService = require('../services/RoleService')
+const bcrypt = require('bcryptjs')
 
 const checkData = []
+
 
 
 // checa se o email já está cadastrado
@@ -36,9 +38,14 @@ const id = [
     })
 ]
 
+
+
+
 checkData.Email = email
 checkData.Id = id
 checkData.Cpf = cpf
+
+
 
 
 module.exports = checkData

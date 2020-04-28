@@ -15,7 +15,7 @@ class UserService {
 
     async getAll(offset, limit = 5, order = 'createdAt') {
         try {
-            let users = this.User.findAndCountAll({
+            let users = await this.User.findAndCountAll({
                 include: [
                     {
                         model: this.Role,
@@ -27,12 +27,12 @@ class UserService {
                 offset: offset
             })
             if (users) {
-                return users
+                return Promise.resolve(users)
             } else {
                 return "Erro ao listar usuários"
             }
         } catch (error) {
-            console.log(error)
+            Promise.reject(error)
         }
     }
 
@@ -83,7 +83,7 @@ class UserService {
 
     async store(data) {
         try {
-            data.id = randomID({ length: 7, type: 'url-safe' })
+            data.id = randomID({ length: 8, type: 'url-safe' })
             var user = await this.User.create(data)
             if (user) {
                 return user

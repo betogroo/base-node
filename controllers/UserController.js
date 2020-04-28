@@ -1,8 +1,10 @@
 const UserService = require('../services/UserService')
 const RoleService = require('../services/RoleService')
+const bcrypt = require('bcryptjs')
+const { cpf } = require('cpf-cnpj-validator')
 const { validationResult } = require('express-validator')
-
-const randomID = require('crypto-random-string')
+const moment = require('moment')
+require('moment/locale/pt-br')
 
 class UserController {
 
@@ -10,10 +12,8 @@ class UserController {
 
     //GET    
     async  index(req, res) {
-        const { cpf } = require('cpf-cnpj-validator')
         var { page } = req.query
-        var limit = 3
-
+        var limit = 5
 
         if (!page || isNaN(page) || page == 1) {
             page = 1
@@ -22,6 +22,7 @@ class UserController {
             page = parseInt(page)
             var offset = (parseInt(page) - 1) * limit
         }
+        
         var users = await UserService.getAll(offset, limit, 'idRole')
 
         users.page = page
@@ -29,6 +30,7 @@ class UserController {
         users.limit = limit
         users.next = users.page + 1
         users.previous = users.page - 1
+        
         if (users.count % limit == 0) {
             users.pages = Math.trunc(users.count / users.limit)
         } else {
@@ -36,13 +38,8 @@ class UserController {
         }
 
 
-
-
-
-
-
-        //res.json(users)
-        res.render("user/index.ejs", { users, cpf });
+    //res.json(users)
+        res.render("user/index.ejs", { users, cpf, moment });
     }
 
     async view(req, res) {
@@ -51,7 +48,7 @@ class UserController {
         try {
             var user = await UserService.getUser(id)
             //res.json({ user })
-            res.render('user/view', { user })
+            res.render('user/view', { user, cpf, moment })
         } catch (error) {
             console.log(error)
         }
@@ -75,11 +72,14 @@ class UserController {
 
         }
     }
+    profile(req, res){
+        res.render('user/profile.ejs')
+    }
 
 
     // POST
     async post(req, res) {
-        var { name, email, rg, cpf, idRole } = req.body
+        var { name, email, rg, cpf, birthDate, gender, idRole } = req.body
 
         let errors = validationResult(req).array();
         var error = []
@@ -93,8 +93,7 @@ class UserController {
             req.flash('error', `${errors.length} erros: ${element}`)
             res.redirect('/user/new')
         } else {
-            var data = { name, email, rg, cpf, idRole }
-            //data.id = randomID({length: 7, type: 'url-safe'})
+            var data = { name, email, rg, cpf, birthDate, gender, idRole }
             data.password = rg.substring(0, 5)
             try {
                 var user = await UserService.store(data)
@@ -118,7 +117,7 @@ class UserController {
     }
 
     async update(req, res) {
-        var { id, name, email, idRole, rg } = req.body
+        var { id, name, email, idRole, birthDate, gender, rg, cpf } = req.body
         let errors = validationResult(req).array();
         var error = []
         if (errors.length > 0) {
@@ -138,7 +137,7 @@ class UserController {
         } else {
 
             try {
-                var data = { id, name, email, idRole, rg }
+                var data = { id, name, email, birthDate, gender, idRole, rg, cpf }
                 var user = await UserService.update(data)
                 if (user) {
                     req.flash('success', `Usuário ${id} editado com sucesso`)
@@ -152,6 +151,59 @@ class UserController {
             }
 
         }
+    }
+    async updateProfile(req, res) {
+        var { id, name, email, idRole, birthDate, gender, rg, cpf, password } = req.body
+        
+        req.session.beto = req.user
+
+
+        let errors = validationResult(req).array();
+        var error = []
+        if (errors.length > 0) {
+
+            errors.forEach(element => {
+                error.push(element.msg)
+            });
+
+
+            if (errors.length == 1) {
+                req.flash('error', `${errors.length} erro: ${error.join(', ')}`)
+            } else {
+                req.flash('error', `${errors.length} erros: ${error.join(', ')}`)
+            }
+
+            res.redirect('/profile')
+        } else {
+            var match = bcrypt.compareSync(password, res.locals.userLogged.password)
+
+            if (match) {
+                try {
+                    var data = { id, name, email, birthDate, gender, idRole, rg, cpf }
+                    var user = await UserService.update(data)
+                    if (user) {
+                        req.flash('success', `Perfil alterado com sucesso`)
+                        res.redirect('/profile')
+                    } else {
+                        req.flash('error', `Não foi possível editar`)
+                        res.redirect('/profile')
+                    }
+                } catch (error) {
+                    console.log(error)
+                }
+            } else {
+                req.flash('error', 'Senha incorreta')
+                res.redirect('/profile')
+            }
+
+           
+
+        }
+
+       
+        
+
+
     }
 
 }

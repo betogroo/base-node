@@ -2,15 +2,18 @@
 
 <div class="container">
 
-    <h1>Usuários</h1>
+    <h2>Usuários</h2>
     <% if (users.rows.length > 0) { %>
 
 
     <table class="table table-sm">
+        <caption><%= `${users.count} usuários cadastrados, divididos em ${users.pages} páginas.` %> </caption>
         <thead>
             <tr>
                 <th scope="col">Id</th>
                 <th scope="col">Nome</th>
+                <th scope="col">Sexo</th>
+                <th scope="col">Data Nascimento</th>
                 <th scope="col">Email</th>
                 <th scope="col">RG</th>
                 <th scope="col">CPF</th>
@@ -23,6 +26,8 @@
             <tr>
                 <th scope="row"><%=user.id%></th>
                 <td><a href="/user/<%=user.id%>"><%=user.name%></a></td>
+                <td><%=user.gender%></td>
+                <td><%=moment(user.birthDate).format('L')%></td>
                 <td><%=user.email%></td>
                 <td><%=user.rg%></td>
                 <td><%=cpf.format(user.cpf)%></td>
@@ -30,9 +35,18 @@
                 <td>
                     <form action="/user/delete" method="POST">
                         <input type="hidden" name="id" value="<%=user.id%>">
-                        <button class="btn btn-sm btn-danger" type="submit">Excluir</button>
+                        <button class="btn btn-sm" type="submit">
+                            <svg class="bi bi-trash-fill text-danger" width="1.5em" height="1.5em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M2.5 1a1 1 0 00-1 1v1a1 1 0 001 1H3v9a2 2 0 002 2h6a2 2 0 002-2V4h.5a1 1 0 001-1V2a1 1 0 00-1-1H10a1 1 0 00-1-1H7a1 1 0 00-1 1H2.5zm3 4a.5.5 0 01.5.5v7a.5.5 0 01-1 0v-7a.5.5 0 01.5-.5zM8 5a.5.5 0 01.5.5v7a.5.5 0 01-1 0v-7A.5.5 0 018 5zm3 .5a.5.5 0 00-1 0v7a.5.5 0 001 0v-7z" clip-rule="evenodd"/>
+                            </svg>
+                        </button>
 
-                        <a class="btn btn-sm btn-warning" href="/user/edit/<%= user.id%>">Editar</a>
+                        <a class="btn btn-sm" href="/user/edit/<%= user.id%>">
+                            <svg class="bi bi-pencil-square text-warning" width="1.5em" height="1.5em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15.502 1.94a.5.5 0 010 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 01.707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 00-.121.196l-.805 2.414a.25.25 0 00.316.316l2.414-.805a.5.5 0 00.196-.12l6.813-6.814z"/>
+                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 002.5 15h11a1.5 1.5 0 001.5-1.5v-6a.5.5 0 00-1 0v6a.5.5 0 01-.5.5h-11a.5.5 0 01-.5-.5v-11a.5.5 0 01.5-.5H9a.5.5 0 000-1H2.5A1.5 1.5 0 001 2.5v11z" clip-rule="evenodd"/>
+                            </svg>
+                        </a>
                     </form>
                 </td>
             </tr>
@@ -40,28 +54,37 @@
 
         </tbody>
     </table>
-    <div>
-        <ul class="pagination justify-content-center">
-            <li class="page-item <% if(users.previous<1){ %>disabled<%}%>">
-                <a class="page-link" href="/users?page=<%=users.previous %>" tabindex="-1" aria-disabled="<% if(users.previous<1){ %>true<%}%>">
-                &lt;&lt;</a>
-            </li>
-                <% for( let i = 0; i < users.pages; i++ ) { %>
-            <li class=" page-item <% if (i+1 == users.page) { %>active<% } %>">
-                <a class="page-link" href="/users?page=<%=i+1%>" aria-disabled="<% if (i+1 == users.page) { %>true<%}%>"><%=i+1%></a></li>
-            <% } %>
-
-
-
-
-
-            <li class=" page-item <% if(users.next > users.pages){ %>disabled<%}%>">
-                <a class="page-link" href="/users?page=<%=users.next %>" tabindex="-1" aria-disabled="<% if(users.next > users.pages){ %>true<%}%>">
-                &gt;&gt;</a>
-            </li>
-            
-        </ul>
-    </div>
+        <% if (users.pages > 1) { %>
+            <div>
+                <ul class="pagination justify-content-center">
+                    <li class="page-item <% if(users.previous<1){ %>disabled<%}%>">
+                        <a class="page-link" href="/users?page=<%=users.previous %>" tabindex="-1" aria-disabled="<% if(users.previous<1){ %>true<%}%>">
+                            <svg class="bi bi-caret-left-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M3.86 8.753l5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 00-1.659-.753l-5.48 4.796a1 1 0 000 1.506z"/>
+                            </svg>
+                        </a>
+                    </li>
+                        <% for( let i = 0; i < users.pages; i++ ) { %>
+                    <li class=" page-item <% if (i+1 == users.page) { %>active<% } %>">
+                        <a class="page-link" href="/users?page=<%=i+1%>" aria-disabled="<% if (i+1 == users.page) { %>true<%}%>"><%=i+1%></a></li>
+                    <% } %>
+        
+        
+        
+        
+        
+                    <li class=" page-item <% if(users.next > users.pages){ %>disabled<%}%>">
+                        <a class="page-link" href="/users?page=<%=users.next %>" tabindex="-1" aria-disabled="<% if(users.next > users.pages){ %>true<%}%>">
+                            <svg class="bi bi-caret-right-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12.14 8.753l-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 011.659-.753l5.48 4.796a1 1 0 010 1.506z"/>
+                            </svg>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
+        <% } %>
+    
     <% } else { %>
     <h4>Não há usuários cadastrados</h4>
     <% } %>

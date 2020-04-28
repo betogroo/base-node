@@ -1,29 +1,43 @@
 'use strict';
 
 module.exports = {
-  up: (queryInterface, Sequelize) => {
+  up: async (queryInterface, Sequelize) => {
 
-      return queryInterface.bulkInsert('Roles', 
-      [
-        {
-          name: 'Usuário',
-          id: 10
-        },
-        {
-          name: 'Moderador',
-          id: 50
-        },
-        {
-          name: 'Super Admin',
-          id: 100
-        }
-    ], {});
-    
+    try {
+      await queryInterface.bulkInsert('Roles', 
+        [
+          {
+            name: 'Usuário',
+            id: 10,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          },
+          {
+            name: 'Moderador',
+            id: 50,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          },
+          {
+            name: 'Super Admin',
+            id: 100,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          }
+      ], {})
+      return Promise.resolve()
+    } catch (error) {
+      return Promise.reject(e)
+    }
   },
 
-  down: (queryInterface, Sequelize) => {
+  down: async (queryInterface, Sequelize) => {
 
-      return queryInterface.bulkDelete('Roles', null, {});
-  
+    try {
+      await queryInterface.bulkDelete('Roles', null, {});
+      return Promise.resolve()
+    } catch (error) {
+      return Promise.reject(error)
+    }
   }
 };

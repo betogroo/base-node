@@ -11,12 +11,13 @@ const checkData = require('../helpers/checkData')
 router.get('/users',
     //isAdmin,
     UserController.index)
+router.get('/user', (req, res)=>{
+    res.redirect('/users')
+})
 router.get('/user/new',
     //isAdmin,
     UserController.new)
-router.get('/user/profile', (req, res) => {
-    res.send('Profile')
-})
+router.get('/profile', UserController.profile)
 router.get('/user/:id', UserController.view)
 router.get('/user/edit/:id', UserController.edit)
 
@@ -30,8 +31,13 @@ router.post('/user',
     ],
     UserController.post)
 router.post('/user/delete/', UserController.delete)
+
 router.post('/user/update',
     validateData.User,
     UserController.update)
+
+router.post('/profile/update',
+    validateData.User,
+    UserController.updateProfile)
 
 module.exports = router

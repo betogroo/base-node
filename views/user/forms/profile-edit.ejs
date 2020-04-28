@@ -1,0 +1,47 @@
+<% if (userLogged) { %>
+    <form action="/profile/update" method="post">
+        <input type="hidden" name="id" value="<%= userLogged.id %>">
+        <div class="form-group">
+            <label for="name">Nome</label>
+            <input type="text" class="form-control" name="name" autocomplete="off" value="<%= userLogged.name %>">
+        </div>
+        <div class="form-group">
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-primary btn-sm">
+                  <input type="radio" name="gender" value="M" autocomplete="off" <% if (userLogged.gender == 'M') { %>
+                   checked
+                  <% } %>> Masculino
+                </label>
+                <label class="btn btn-primary btn-sm">
+                  <input type="radio" name="gender" value="F" autocomplete="off"  <% if (userLogged.gender == 'F') { %>
+                    checked
+                   <% } %>> Feminino
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="rg">RG</label>
+            <input type="text" class="form-control" name="rg" autocomplete="off" value="<%= userLogged.rg %>">
+    
+        </div>
+        <div class="form-group">
+            <label for="cpf">CPF</label>
+            <input type="text" maxlength="11" class="form-control" name="cpf" value="<%= userLogged.cpf %>">
+    
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" name="email" autocomplete="off" value="<%= userLogged.email %>">
+        </div>
+        <div class="form-group">
+            <label for="birthDate">Data de Nascimento</label>
+            <input type="date" class="form-control" name="birthDate" value="<%= userLogged.birthDate %>">
+        </div>
+        <div class="form-group">
+            <label for="password">Senha</label>
+            <input type="password" class="form-control" name="password" autocomplete="off">
+        </div>
+       
+        <button type="submit" class="btn btn-primary">Salvar</button>
+    </form>
+<% } %>
