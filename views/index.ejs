@@ -6,14 +6,14 @@
     <div class="alert alert-danger"><%= error%></div>
     <% } %>
 
-    <h1>Logado como <%= userLogged.name %> </h1>
+
     <div class="list-group">
         <a href="/users" class="list-group-item list-group-item-action active">
             Usuários
         </a>
         <a href="/roles" class="list-group-item list-group-item-action">Permissões</a>
         <a href="#" class="list-group-item list-group-item-action">Morbi leo risus</a>
-        <a href="#" class="list-group-item list-group-item-action">Porta ac consectetur ac</a>
+        <a href="/profile" class="list-group-item list-group-item-action">Profile deletar isso aqui</a>
         <a href="/logout" class="list-group-item list-group-item-action">Sair</a>
     </div>
 
@@ -23,7 +23,7 @@
 
     <% } %>
 
-        <%- include('partials/msg.ejs') %> 
+    <%- include('partials/msg.ejs') %>
 </div>
 
 <%- include('partials/footer.ejs') %>

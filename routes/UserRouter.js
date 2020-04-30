@@ -11,7 +11,7 @@ const checkData = require('../helpers/checkData')
 router.get('/users',
     //isAdmin,
     UserController.index)
-router.get('/user', (req, res)=>{
+router.get('/user', (req, res) => {
     res.redirect('/users')
 })
 router.get('/user/new',
@@ -37,7 +37,7 @@ router.post('/user/update',
     UserController.update)
 
 router.post('/profile/update',
-    validateData.User,
+    [validateData.User, validateData.Password],
     UserController.updateProfile)
 
 module.exports = router

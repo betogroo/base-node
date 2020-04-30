@@ -24,6 +24,7 @@ app.use(flash())
 app.use((req, res, next) => {
     res.locals.success = req.flash('success')
     res.locals.error = req.flash('error') // erro login
+    res.locals.alert = req.flash('alert') // utilizando esse para alertas gerais
     //res.locals.error_msg = req.flash('error_msg')
     res.locals.userLogged = req.user || null
     // testes

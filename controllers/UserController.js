@@ -22,7 +22,7 @@ class UserController {
             page = parseInt(page)
             var offset = (parseInt(page) - 1) * limit
         }
-        
+
         var users = await UserService.getAll(offset, limit, 'idRole')
 
         users.page = page
@@ -30,7 +30,7 @@ class UserController {
         users.limit = limit
         users.next = users.page + 1
         users.previous = users.page - 1
-        
+
         if (users.count % limit == 0) {
             users.pages = Math.trunc(users.count / users.limit)
         } else {
@@ -38,7 +38,7 @@ class UserController {
         }
 
 
-    //res.json(users)
+        //res.json(users)
         res.render("user/index.ejs", { users, cpf, moment });
     }
 
@@ -69,10 +69,10 @@ class UserController {
             //res.json({ user, roles })
             res.render('user/edit.ejs', { user, roles })
         } catch (error) {
-
+            console.log(error)
         }
     }
-    profile(req, res){
+    profile(req, res) {
         res.render('user/profile.ejs')
     }
 
@@ -80,23 +80,22 @@ class UserController {
     // POST
     async post(req, res) {
         var { name, email, rg, cpf, birthDate, gender, idRole } = req.body
-
-        let errors = validationResult(req).array();
         var error = []
-        if (errors.length > 0) {
+        let errors = validationResult(req).array();
+        //res.json(errors) test errors array
 
-            var element = ""
+        if (errors.length > 0) {
             for (let i = 0; i < errors.length; i++) {
-                element += `${i + 1} - ${errors[i].msg} `;
+                error[i] = { "msg": `<div class="alert alert-danger mt-1">${errors[i].msg} </div>`, "param": errors[i].param }
             }
-            //res.json(element)
-            req.flash('error', `${errors.length} erros: ${element}`)
+            req.flash('alert', error)
             res.redirect('/user/new')
         } else {
             var data = { name, email, rg, cpf, birthDate, gender, idRole }
             data.password = rg.substring(0, 5)
             try {
                 var user = await UserService.store(data)
+                req.flash('error', `<div class="alert alert-success mt-1">Usuário ${user.name} cadastrado com sucesso</div>`) // coloquei error para testar a variável
                 //res.json({ user })
                 res.redirect('/users')
             } catch (error) {
@@ -109,42 +108,36 @@ class UserController {
         var { id } = req.body
         var user = await UserService.delete(id)
         if (user) {
-            //res.json({ "msg": "Usuário " + id + " deletado com sucesso" })
+            req.flash('alert', `<div class="alert alert-success mt-1">Usuário excluído com sucesso</div>`) // coloquei alertor para testar a variável
             res.redirect('/users')
         } else {
-            res.json({ "msg": `Não foi possível excluir o usuário ${id}` })
+            req.flash('alert', `<div class="alert alert-success mt-1">Não foi possível exluir o usuário</div>`) // coloquei error para testar a variável
+            res.redirect('/users')
         }
     }
 
     async update(req, res) {
         var { id, name, email, idRole, birthDate, gender, rg, cpf } = req.body
-        let errors = validationResult(req).array();
         var error = []
+        let errors = validationResult(req).array();
+
         if (errors.length > 0) {
-
-            errors.forEach(element => {
-                error.push(element.msg)
-            });
-
-
-            if (errors.length == 1) {
-                req.flash('error', `${errors.length} erro: ${error.join(', ')}`)
-            } else {
-                req.flash('error', `${errors.length} erros: ${error.join(', ')}`)
+            for (let i = 0; i < errors.length; i++) {
+                error[i] = { "msg": `<div class="alert alert-danger mt-1">${errors[i].msg} </div>`, "param": errors[i].param }
             }
-
-            res.redirect('/user/edit/' + id)
+            req.flash('alert', error)
+            res.redirect(`/user/edit/${id}`)
         } else {
 
             try {
                 var data = { id, name, email, birthDate, gender, idRole, rg, cpf }
                 var user = await UserService.update(data)
                 if (user) {
-                    req.flash('success', `Usuário ${id} editado com sucesso`)
+                    req.flash('alert', `<div class="alert alert-success mt-1">Usuário ${name} editado com sucesso</div>`)
                     res.redirect('/users')
                 } else {
-                    req.flash('success', `Não foi possível editar`)
-                    res.redirect('/user/edit/' + id)
+                    req.flash('alert', `Não foi possível editar`)
+                    res.redirect(`/user/edit/${id}`)
                 }
             } catch (error) {
                 console.log(error)
@@ -154,12 +147,44 @@ class UserController {
     }
     async updateProfile(req, res) {
         var { id, name, email, idRole, birthDate, gender, rg, cpf, password } = req.body
-        
-        req.session.beto = req.user
-
-
-        let errors = validationResult(req).array();
         var error = []
+        let errors = validationResult(req).array();
+
+        if (errors.length > 0) {
+
+            for (let i = 0; i < errors.length; i++) {
+                error[i] = { "msg": `<div class="alert alert-danger mt-1">${errors[i].msg}</div>`, "param": errors[i].param }
+            }
+
+
+            req.flash('error', error)
+            res.redirect('/profile')
+        } else {
+            var match = bcrypt.compareSync(password, res.locals.userLogged.password)
+
+            if (match) {
+                try {
+                    var data = { id, name, email, birthDate, gender, idRole, rg, cpf }
+                    var user = await UserService.update(data)
+                    if (user) {
+                        req.flash('success', `Perfil alterado com sucesso`)
+                        res.redirect('/profile')
+                    } else {
+                        req.flash('error', `Não foi possível editar`)
+                        res.redirect('/profile')
+                    }
+                } catch (error) {
+                    console.log(error)
+                }
+            } else {
+                error = { "msg": "Senha incorreta", "param": "password" }
+                req.flash('error', error)
+                res.redirect('/profile')
+            }
+
+        }
+
+        /* var error = []
         if (errors.length > 0) {
 
             errors.forEach(element => {
@@ -196,12 +221,12 @@ class UserController {
                 res.redirect('/profile')
             }
 
-           
+
 
         }
+ */
 
-       
-        
+
 
 
     }

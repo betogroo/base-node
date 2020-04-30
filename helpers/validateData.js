@@ -10,26 +10,34 @@ const validateData = []
 const user = [
     check('name')
         .not().isEmpty().withMessage('O campo Nome não pode ser vazio')
-        .not().isIn(badLanguage).withMessage('por favor não use palavrões no nome')
-        .not().isNumeric().withMessage('Campo nome não aceita números')
+        .not().isIn(badLanguage).withMessage('Nome inadequado')
+        .not().isNumeric().withMessage('Campo Nome não aceita números')
         .trim(),
-    check('rg').isNumeric().withMessage('O campo RG só aceita número')
+    check('rg')
+        .not().isEmpty().withMessage('O Campo RG é Obrigatório')
+        .isNumeric().withMessage('O campo RG só aceita número')
         .trim(),
-    check('email').isEmail().withMessage('Email inválido')
+    check('email')
         .not().isEmpty().withMessage('Obrigatório o cadastro do email')
+        .isEmail().withMessage('Email inválido')
         .trim(),
-    check('birthDate').custom(async value => {
-        if (moment().isBefore(value)) {
-            return Promise.reject('Data de Nascimento inválida');
-        }
-    })
+    check('birthDate')
+        .custom(async value => {
+            if (moment().isBefore(value)) {
+                return Promise.reject('Data de Nascimento futura');
+            }
+        })
+        .not().isEmpty().withMessage('Campo data obrigatório')
         .trim(),
     check('cpf').custom(async value => {
         if (!cpf.isValid(value)) {
             return Promise.reject('CPF Inválido');
         }
     })
-    .trim(),
+        .trim()
+]
+
+const password = [
     check('password')
         .not().isEmpty().withMessage('Obrigatória a senha.')
 ]
@@ -44,7 +52,10 @@ const role = [
 
 ]
 
+
+
 validateData.User = user
 validateData.Role = role
+validateData.Password = password
 
 module.exports = validateData
