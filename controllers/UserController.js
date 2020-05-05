@@ -75,9 +75,32 @@ class UserController {
     profile(req, res) {
         res.render('user/profile.ejs')
     }
+    editPassword(req, res){
+        res.render('user/password-edit.ejs', {moment})
+    }
 
 
     // POST
+
+    
+    async updatePassword(req, res){
+        let {password, passwordMatch, passwordNew} = req.body
+        let data = {password, passwordMatch, passwordNew}
+
+        //var match = bcrypt.compareSync(password, res.locals.userLogged.password)
+        let errors = validationResult(req).array();
+        if (errors.length > 0) {
+            res.json(errors)
+        } else {
+            data.id = res.locals.userLogged.id
+            data.password = passwordNew
+            var user = await UserService.update(data)
+            res.json({data, user})
+        }
+        
+        //res.json({data})
+    }
+
     async post(req, res) {
         var { name, email, rg, cpf, birthDate, gender, idRole } = req.body
         var error = []
@@ -95,7 +118,7 @@ class UserController {
             data.password = rg.substring(0, 5)
             try {
                 var user = await UserService.store(data)
-                req.flash('error', `<div class="alert alert-success mt-1">Usuário ${user.name} cadastrado com sucesso</div>`) // coloquei error para testar a variável
+                req.flash('alert', `<div class="alert alert-success mt-1">Usuário ${user.name} cadastrado com sucesso</div>`) // coloquei error para testar a variável
                 //res.json({ user })
                 res.redirect('/users')
             } catch (error) {
@@ -157,7 +180,7 @@ class UserController {
             }
 
 
-            req.flash('error', error)
+            req.flash('alert', error)
             res.redirect('/profile')
         } else {
             var match = bcrypt.compareSync(password, res.locals.userLogged.password)
@@ -167,10 +190,10 @@ class UserController {
                     var data = { id, name, email, birthDate, gender, idRole, rg, cpf }
                     var user = await UserService.update(data)
                     if (user) {
-                        req.flash('success', `Perfil alterado com sucesso`)
+                        req.flash('success', `<div class="alert alert-success mt-1">Perfil alterado com sucesso!</div>`) // tem que ser success aqui
                         res.redirect('/profile')
                     } else {
-                        req.flash('error', `Não foi possível editar`)
+                        req.flash('alert', `Não foi possível editar`)
                         res.redirect('/profile')
                     }
                 } catch (error) {
@@ -178,7 +201,7 @@ class UserController {
                 }
             } else {
                 error = { "msg": "Senha incorreta", "param": "password" }
-                req.flash('error', error)
+                req.flash('alert', error)
                 res.redirect('/profile')
             }
 

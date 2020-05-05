@@ -7,8 +7,8 @@
     <div class="form-group">
         <label for="name">Nome</label>
         <input type="text" class="form-control" name="name" autocomplete="off" value="<%= userLogged.name %>">
-        <% if (error.length > 0) { %>
-        <% error.forEach(e => { %>
+        <% if (alert.length > 0) { %>
+        <% alert.forEach(e => { %>
         <% if (e.param == 'name') { %>
         <%- e.msg %>
         <% } %>
@@ -31,8 +31,8 @@
     <div class="form-group">
         <label for="rg">RG</label>
         <input type="text" class="form-control" name="rg" autocomplete="off" value="<%= userLogged.rg %>">
-        <% if (error.length > 0) { %>
-        <% error.forEach(e => { %>
+        <% if (alert.length > 0) { %>
+        <% alert.forEach(e => { %>
         <% if (e.param == 'rg') { %>
         <%- e.msg %>
         <% } %>
@@ -42,8 +42,8 @@
     <div class="form-group">
         <label for="cpf">CPF</label>
         <input type="text" maxlength="11" class="form-control" name="cpf" value="<%= userLogged.cpf %>">
-        <% if (error.length > 0) { %>
-        <% error.forEach(e => { %>
+        <% if (alert.length > 0) { %>
+        <% alert.forEach(e => { %>
         <% if (e.param == 'cpf') { %>
         <%- e.msg %>
         <% } %>
@@ -53,8 +53,8 @@
     <div class="form-group">
         <label for="email">Email</label>
         <input type="email" class="form-control" name="email" autocomplete="off" value="<%= userLogged.email %>">
-        <% if (error.length > 0) { %>
-        <% error.forEach(e => { %>
+        <% if (alert.length > 0) { %>
+        <% alert.forEach(e => { %>
         <% if (e.param == 'email') { %>
         <%- e.msg %>
         <% } %>
@@ -68,8 +68,8 @@
     <div class="form-group">
         <label for="password">Senha</label>
         <input type="password" class="form-control" name="password" autocomplete="off">
-        <% if (error.length > 0) { %>
-        <% error.forEach(e => { %>
+        <% if (alert.length > 0) { %>
+        <% alert.forEach(e => { %>
         <% if (e.param == 'password') { %>
         <%- e.msg %>
         <% } %>
@@ -78,9 +78,9 @@
     </div>
 
     <button type="submit" class="btn btn-primary">Salvar</button>
-    <% if (success != '') { %>
-    <div class="alert alert-success mt-1"><%= success %> </div>
-    <% } %>
+    <% if (success.length > 0) { %>
+        <%- success %> 
+       <% } %>
 
 
 

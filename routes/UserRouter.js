@@ -18,8 +18,13 @@ router.get('/user/new',
     //isAdmin,
     UserController.new)
 router.get('/profile', UserController.profile)
+router.get('/profile/password', UserController.editPassword)
 router.get('/user/:id', UserController.view)
 router.get('/user/edit/:id', UserController.edit)
+
+router.post('/profile/password',
+validateData.Password,
+UserController.updatePassword)
 
 
 

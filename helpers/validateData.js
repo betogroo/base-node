@@ -1,5 +1,5 @@
 'use strict';
-const { check } = require('express-validator')
+const { check, body } = require('express-validator')
 const { cpf } = require('cpf-cnpj-validator')
 const moment = require('moment')
 const badLanguage = ['bosta', 'merda', 'coco', 'inferno', 'xixi', 'caraio', 'aaa']
@@ -38,8 +38,17 @@ const user = [
 ]
 
 const password = [
-    check('password')
-        .not().isEmpty().withMessage('Obrigatória a senha.')
+    body('password')
+        .not().isEmpty().withMessage('Obrigatória a senha.'),
+    body('passwordMatch')
+    .not().isEmpty().withMessage('Obrigatório confirmar a senha!')
+    .custom( async (value, {req})=>{
+        if (value != req.body.passwordNew) {
+            return Promise.reject('As senhas não coincidem!');
+        }
+    }),
+    body('passwordNew')
+    .not().isEmpty().withMessage('Obrigatória a senha!')
 ]
 
 
@@ -57,5 +66,6 @@ const role = [
 validateData.User = user
 validateData.Role = role
 validateData.Password = password
+
 
 module.exports = validateData
