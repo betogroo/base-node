@@ -39,16 +39,21 @@ const user = [
 
 const password = [
     body('password')
+        .not().isEmpty().withMessage('Obrigatória a senha.')
+]
+
+const passwordUpdate = [
+    body('password')
         .not().isEmpty().withMessage('Obrigatória a senha.'),
     body('passwordMatch')
-    .not().isEmpty().withMessage('Obrigatório confirmar a senha!')
-    .custom( async (value, {req})=>{
-        if (value != req.body.passwordNew) {
-            return Promise.reject('As senhas não coincidem!');
-        }
-    }),
+        .not().isEmpty().withMessage('Obrigatório confirmar a senha!')
+        .custom(async (value, { req }) => {
+            if (value != req.body.passwordNew) {
+                return Promise.reject('As senhas não coincidem!');
+            }
+        }),
     body('passwordNew')
-    .not().isEmpty().withMessage('Obrigatória a senha!')
+        .not().isEmpty().withMessage('Obrigatória a senha!')
 ]
 
 
@@ -66,6 +71,7 @@ const role = [
 validateData.User = user
 validateData.Role = role
 validateData.Password = password
+validateData.PasswordUpdate = passwordUpdate
 
 
 module.exports = validateData

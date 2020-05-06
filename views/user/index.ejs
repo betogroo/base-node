@@ -10,7 +10,6 @@
         <caption><%= `${users.count} usuários cadastrados, divididos em ${users.pages} páginas.` %> </caption>
         <thead>
             <tr>
-                <th scope="col">Id</th>
                 <th scope="col">Nome</th>
                 <th scope="col">Sexo</th>
                 <th scope="col">Data Nascimento</th>
@@ -24,7 +23,6 @@
         <tbody>
             <% users.rows.forEach(user => { %>
             <tr>
-                <th scope="row"><%=user.id%></th>
                 <td><a href="/user/<%=user.id%>"><%=user.name%></a></td>
                 <td><%=user.gender%></td>
                 <td><%=moment(user.birthDate).format('L')%></td>

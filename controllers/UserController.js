@@ -13,9 +13,9 @@ class UserController {
     //GET    
     async  index(req, res) {
         var { page } = req.query
-        var limit = 5
+        var limit = 15
 
-        if (!page || isNaN(page) || page == 1) {
+        if (!page || isNaN(page) || page == 1 || page == 0) {
             page = 1
             var offset = 0
         } else {
@@ -39,6 +39,9 @@ class UserController {
 
 
         //res.json(users)
+        if (page > users.pages) {
+            res.send("Erro 404 - Página não encontrada")
+        }
         res.render("user/index.ejs", { users, cpf, moment });
     }
 
@@ -75,29 +78,45 @@ class UserController {
     profile(req, res) {
         res.render('user/profile.ejs')
     }
-    editPassword(req, res){
-        res.render('user/password-edit.ejs', {moment})
+    editPassword(req, res) {
+        res.render('user/password-edit.ejs', { moment })
     }
 
 
     // POST
 
-    
-    async updatePassword(req, res){
-        let {password, passwordMatch, passwordNew} = req.body
-        let data = {password, passwordMatch, passwordNew}
 
-        //var match = bcrypt.compareSync(password, res.locals.userLogged.password)
-        let errors = validationResult(req).array();
+    async updatePassword(req, res) {
+        var { password, passwordMatch, passwordNew } = req.body
+        var data = { password, passwordMatch, passwordNew }
+
+
+        var errors = validationResult(req).array();
         if (errors.length > 0) {
-            res.json(errors)
+            var error = []
+            for (let i = 0; i < errors.length; i++) {
+                error[i] = { "msg": `<div class="alert alert-danger mt-1">${errors[i].msg} </div>`, "param": errors[i].param }
+            }
+            req.flash('alert', error)
+            res.redirect('/profile/password')
         } else {
-            data.id = res.locals.userLogged.id
-            data.password = passwordNew
-            var user = await UserService.update(data)
-            res.json({data, user})
+            var match = bcrypt.compareSync(password, res.locals.userLogged.password)
+            if (match) {
+                data.id = res.locals.userLogged.id
+                data.password = passwordNew
+                var user = await UserService.update(data)
+                req.logout()
+                req.flash('success', 'Senha alterada com sucesso. Faça o login novamente!')
+                res.redirect('/')
+                //res.json({ data, user })
+            } else {
+                req.flash('error', `<div class="alert alert-danger mt-1">Senha Incorreta</div>`)
+                res.redirect('/profile/password')
+            }
+
+
         }
-        
+
         //res.json({data})
     }
 
@@ -182,9 +201,10 @@ class UserController {
 
             req.flash('alert', error)
             res.redirect('/profile')
+
         } else {
             var match = bcrypt.compareSync(password, res.locals.userLogged.password)
-
+            //res.json({ "digitada": password, "Sistema": res.locals.userLogged.password })
             if (match) {
                 try {
                     var data = { id, name, email, birthDate, gender, idRole, rg, cpf }
@@ -193,65 +213,19 @@ class UserController {
                         req.flash('success', `<div class="alert alert-success mt-1">Perfil alterado com sucesso!</div>`) // tem que ser success aqui
                         res.redirect('/profile')
                     } else {
-                        req.flash('alert', `Não foi possível editar`)
+                        req.flash('success', `Não foi possível editar`)
                         res.redirect('/profile')
                     }
                 } catch (error) {
                     console.log(error)
                 }
             } else {
-                error = { "msg": "Senha incorreta", "param": "password" }
-                req.flash('alert', error)
+
+                req.flash('success', `<div class="alert alert-danger mt-1">Não foi possível alterar. Senha incorreta!</div>`)
                 res.redirect('/profile')
             }
 
         }
-
-        /* var error = []
-        if (errors.length > 0) {
-
-            errors.forEach(element => {
-                error.push(element.msg)
-            });
-
-
-            if (errors.length == 1) {
-                req.flash('error', `${errors.length} erro: ${error.join(', ')}`)
-            } else {
-                req.flash('error', `${errors.length} erros: ${error.join(', ')}`)
-            }
-
-            res.redirect('/profile')
-        } else {
-            var match = bcrypt.compareSync(password, res.locals.userLogged.password)
-
-            if (match) {
-                try {
-                    var data = { id, name, email, birthDate, gender, idRole, rg, cpf }
-                    var user = await UserService.update(data)
-                    if (user) {
-                        req.flash('success', `Perfil alterado com sucesso`)
-                        res.redirect('/profile')
-                    } else {
-                        req.flash('error', `Não foi possível editar`)
-                        res.redirect('/profile')
-                    }
-                } catch (error) {
-                    console.log(error)
-                }
-            } else {
-                req.flash('error', 'Senha incorreta')
-                res.redirect('/profile')
-            }
-
-
-
-        }
- */
-
-
-
-
     }
 
 }

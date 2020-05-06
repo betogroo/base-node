@@ -23,8 +23,8 @@ router.get('/user/:id', UserController.view)
 router.get('/user/edit/:id', UserController.edit)
 
 router.post('/profile/password',
-validateData.Password,
-UserController.updatePassword)
+    validateData.PasswordUpdate,
+    UserController.updatePassword)
 
 
 
