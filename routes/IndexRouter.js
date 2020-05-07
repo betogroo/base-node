@@ -7,6 +7,7 @@ const { isAdmin, isUser } = require('../helpers/permission')
 //router.get('/', IndexController.index)
 router.get('/', IndexController.index)
 router.get('/logout', IndexController.logout)
+router.get('/test', IndexController.test)
 
 
 router.post('/', IndexController.post)
