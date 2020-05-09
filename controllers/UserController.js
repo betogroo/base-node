@@ -13,7 +13,7 @@ class UserController {
     //GET    
     async  index(req, res) {
         var { page } = req.query
-        var limit = 15
+        var limit = 50
 
         if (!page || isNaN(page) || page == 1 || page == 0) {
             page = 1

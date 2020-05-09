@@ -13,7 +13,7 @@ class UserService {
         this.Role = db['Role']
     }
 
-    async getAll(offset, limit = 5, order = 'createdAt') {
+    async getAll(offset, limit, order) {
         try {
             let users = await this.User.findAndCountAll({
                 include: [
@@ -23,8 +23,8 @@ class UserService {
                     }
                 ],
                 order: [[order, 'DESC']],
-                limit: limit,
-                offset: offset
+                offset: offset,
+                limit: limit
             })
             if (users) {
                 return Promise.resolve(users)
