@@ -15,6 +15,7 @@ const user = [
         .trim(),
     check('rg')
         .not().isEmpty().withMessage('O Campo RG é Obrigatório')
+        .blacklist('\.-')
         .isNumeric().withMessage('O campo RG só aceita número')
         .trim(),
     check('email')
@@ -29,11 +30,13 @@ const user = [
         })
         .not().isEmpty().withMessage('Campo data obrigatório')
         .trim(),
-    check('cpf').custom(async value => {
-        if (!cpf.isValid(value)) {
-            return Promise.reject('CPF Inválido');
-        }
-    })
+    check('cpf')
+        .custom(async value => {
+            if (!cpf.isValid(value)) {
+                return Promise.reject('CPF Inválido');
+            }
+        })
+        .blacklist('\.-')
         .trim()
 ]
 
