@@ -48,7 +48,7 @@ function getRandomPeople() {
         "CAIQUE",
         "CAIK",
         "GUSTAVO",
-        "JOÃO",
+        "JOÃO","JOÃO","JOÃO","JOÃO","JOÃO","JOÃO","JOÃO",
         "PAULO",
         "OSVALDO",
         "OLAVO",
@@ -150,7 +150,10 @@ function getRandomPeople() {
         "LUIS HENRIQUE",
         "LUIZ HENRIQUE",
         "JOÃO PAULO",
-        "JOSÉ PAULO"
+        "JOSÉ PAULO",
+        "JOSÉ","JOSÉ","JOSÉ","JOSÉ","JOSÉ","JOSÉ","JOSÉ","JOSÉ","JOSÉ","JOSÉ",
+        "CAUÃ", "RICRDO", "ÍTALO", "IGOR", "BERNARDO",
+        "ARTUR", "ARTHUR", "VÍCTOR", "VÍTOR", "VICTOR HUGO", 
       ],
 
 
@@ -184,7 +187,7 @@ function getRandomPeople() {
         "ADRIANA",
         "LUANA",
         "LUANDA",
-        "MARIA",
+        "MARIA","MARIA","MARIA","MARIA","MARIA","MARIA","MARIA",
         "ROBERTA",
         "LUISA",
         "LUIZA",
@@ -236,7 +239,9 @@ function getRandomPeople() {
         "MARIA LAURA",
         "LAURA",
         "MARIANA",
-        "ROGÉRIA"
+        "ROGÉRIA",
+        "VALENTINA", "ANNE", "TAÍSSA", "ANTÔNIA", "LARISSA", "FABIANA", "TÂNIA", "ZYRA", "CAITLYN", "SONA", "IRÉLIA", "AKALI",
+        "CAMILE", "FIORA", "KAISA", "SIVIR", "JANA", "MORGANA", "KAYLE", "LEONA", "LE BLANK"
 
       ]
   }
@@ -246,7 +251,7 @@ function getRandomPeople() {
       "Garcia", "da Silva", "Ferreira", "Melo", "Mello", "Costa", "Nunes", "Pereira", "Monteiro", "Freitas", "Cirilo",
       "Teodoro", "Rodrigues", "Bolsonaro", "da Costa", "dos Anjos", "Silva", "Moraes", "Viana", "Vianna", "Bucioli",
       "Zuviollo", "Aragão", "Piloto", "Vicente", "Gomes", "Gumieiro", "Tancredo", "Salgado", "de Jesus", "Alotonni", "Borges",
-      "Mendonza", "Camargo", "Chesca", "Almeida", "da Mata", "Pinto"
+      "Mendonza", "Camargo", "Chesca", "Almeida", "da Mata", "Pinto", "Marrone"
     ]
 
   var gender = getRandomGender()
@@ -289,7 +294,7 @@ function getRandomEmail(name) {
 
 var data = []
 
-for (let i = 0; i < 500; i++) {
+for (let i = 0; i < 1000; i++) {
   var people = getRandomPeople()
   var name = people.fullName
   var email = people.email

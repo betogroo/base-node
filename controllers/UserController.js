@@ -12,7 +12,7 @@ class UserController {
 
     //GET    
     async  index(req, res) {
-        var { page } = req.query
+        var { page, q, mode } = req.query
         var limit = 50
 
         if (!page || isNaN(page) || page == 1 || page == 0) {
@@ -22,9 +22,33 @@ class UserController {
             page = parseInt(page)
             var offset = (parseInt(page) - 1) * limit
         }
+        if (q) {
 
-        var users = await UserService.getAll(offset, limit, 'idRole')
+            switch (mode) {
+                case 'name':
+                    var users = await UserService.getByName(offset, limit, q)
+                    break
+                case 'cpf':
+                    var users = await UserService.getByCpf(q)
+                   
+                    break
+                case 'rg':
+                    var users = {"Buscou": "Pelo RG"}
+                    break
+                case 'email':
+                    var users = {"Buscou": "Pelo Email"}
+                    break
+                }
 
+            console.log("Aqui")
+            users.q = q
+            users.mode = mode
+            res.json(users)
+        } else {
+            var users = await UserService.getAll(offset, limit, 'idRole')
+        }
+        
+// se o modo for de busca de um resultado, mostrar senao mostrar o outro
         users.page = page
         users.offset = offset
         users.limit = limit
@@ -38,11 +62,12 @@ class UserController {
         }
 
 
-        //res.json(users)
+        
         if (page > users.pages) {
             res.send("Erro 404 - Página não encontrada")
         }
-        res.render("user/index.ejs", { users, cpf, moment });
+        //res.render("user/index.ejs", { users, cpf, moment })
+        //res.json(users)
     }
 
     async view(req, res) {
@@ -53,7 +78,7 @@ class UserController {
             //res.json({ user })
             res.render('user/view', { user, cpf, moment })
         } catch (error) {
-            console.log(error)
+            console.log(`Erro: ${error}.`)
         }
 
 

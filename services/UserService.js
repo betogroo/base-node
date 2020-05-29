@@ -81,6 +81,31 @@ class UserService {
         }
     }
 
+    async getByName(offset, limit, name){
+        try {
+            let users = await this.User.findAndCountAll({
+                include: [
+                    {
+                        model: this.Role,
+                        attributes: ['id', 'name']
+                    }
+                ],
+                where: {
+                    name: {
+                        [Op.substring]: name // Aprimorar a busca.
+                    }
+                },
+                order: [['name']],
+                offset: offset,
+                limit: limit
+            })
+            return users
+        } catch (error) {
+            console.log(`Erro: ${error}.`)
+        }
+
+    }
+
     async store(data) {
         try {
             data.id = randomID({ length: 8, type: 'url-safe' })
