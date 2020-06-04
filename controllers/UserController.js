@@ -12,8 +12,8 @@ class UserController {
 
     //GET    
     async  index(req, res) {
-        var { page, q, mode } = req.query
-        var limit = 50
+        var { page, sname } = req.query
+        var limit = 20
 
         if (!page || isNaN(page) || page == 1 || page == 0) {
             page = 1
@@ -22,38 +22,26 @@ class UserController {
             page = parseInt(page)
             var offset = (parseInt(page) - 1) * limit
         }
-        if (q) {
 
-            switch (mode) {
-                case 'name':
-                    var users = await UserService.getByName(offset, limit, q)
-                    break
-                case 'cpf':
-                    var users = await UserService.getByCpf(q)
-                   
-                    break
-                case 'rg':
-                    var users = {"Buscou": "Pelo RG"}
-                    break
-                case 'email':
-                    var users = {"Buscou": "Pelo Email"}
-                    break
-                }
+        if (sname) {
+            var users = await UserService.getByName(offset, limit, sname)
+            users.sname = sname
+            if (users.count < 1) {
+                req.flash('alert', `<div class="alert alert-danger mt-1">A busca por ${sname} não teve resultados</div>`)
+                res.redirect(`/users`)
+            }
 
-            console.log("Aqui")
-            users.q = q
-            users.mode = mode
-            res.json(users)
         } else {
             var users = await UserService.getAll(offset, limit, 'idRole')
+            users.sname = false
         }
-        
-// se o modo for de busca de um resultado, mostrar senao mostrar o outro
+
         users.page = page
         users.offset = offset
         users.limit = limit
         users.next = users.page + 1
         users.previous = users.page - 1
+
 
         if (users.count % limit == 0) {
             users.pages = Math.trunc(users.count / users.limit)
@@ -61,11 +49,6 @@ class UserController {
             users.pages = Math.trunc(users.count / users.limit) + 1
         }
 
-
-        
-        if (page > users.pages) {
-            res.send("Erro 404 - Página não encontrada")
-        }
         res.render("user/index.ejs", { users, cpf, moment })
         //res.json(users)
     }
