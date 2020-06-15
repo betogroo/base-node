@@ -13,7 +13,7 @@ class UserController {
     //GET    
     async  index(req, res) {
         var { page, sname } = req.query
-        var limit = 20
+        var limit = 10
 
         if (!page || isNaN(page) || page == 1 || page == 0) {
             page = 1
@@ -26,10 +26,6 @@ class UserController {
         if (sname) {
             var users = await UserService.getByName(offset, limit, sname)
             users.sname = sname
-            if (users.count < 1) {
-                req.flash('alert', `<div class="alert alert-danger mt-1">A busca por ${sname} não teve resultados</div>`)
-                res.redirect(`/users`)
-            }
 
         } else {
             var users = await UserService.getAll(offset, limit, 'idRole')

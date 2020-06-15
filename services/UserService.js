@@ -92,7 +92,7 @@ class UserService {
                 ],
                 where: {
                     name: {
-                        [Op.substring]: name // Aprimorar a busca.
+                        [Op.startsWith]: name // Aprimorar a busca.
                     }
                 },
                 order: [['name']],

@@ -294,7 +294,7 @@ function getRandomEmail(name) {
 
 var data = []
 
-for (let i = 0; i < 1000; i++) {
+for (let i = 0; i < 50; i++) {
   var people = getRandomPeople()
   var name = people.fullName
   var email = people.email
